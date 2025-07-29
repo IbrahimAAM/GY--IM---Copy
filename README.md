@@ -2,17 +2,23 @@
 
 **Global Voyage** is a modern, user-centric travel website built to inspire exploration and streamline trip planning. Whether you're dreaming of your next getaway or browsing travel essentials, Global Voyage offers destination highlights, shopping options, contact information, and a seamless, responsive interface.
 
-🔗 **Explore the site:** [https://juanjbsalas.github.io/Global-Voyage/](https://juanjbsalas.github.io/Global-Voyage/)
+🔗 **Explore the site:** [https://gy-im-copy.vercel.app/](https://gy-im-copy.vercel.app/)
 
 ---
 
 ## 🚀 Features
 
-- 🏝️ Destination pages for travel inspiration (`dest1`, `Alaska`, `Andalusia`, `Egypt`)
-- 🏠 Interactive and welcoming homepage (`home`)
-- 🛒 Travel product shop with a clean UI (`shop`)
-- 📬 Contact form and details for inquiries (`contact`)
-- 🌐 Responsive landing page (`index.html`)
+- 🏝️ **Destination Pages:** Discover travel inspiration with detailed destination pages including Alaska, Andalusia, Egypt, and more.
+- 🏠 **Interactive Homepage:** A welcoming, responsive landing page that introduces users to the Global Voyage experience.
+- 🛒 **Travel Shop:** Browse and purchase travel essentials and products through a clean, user-friendly shop interface.
+- 📬 **Contact Form:** Easily reach out for inquiries or support via a dedicated contact page.
+- 🧭 **Travel Quiz:** An interactive quiz that helps users plan their trip by suggesting flights and activities based on their preferences, using the Amadeus API.
+- ✈️ **Flight Search:** Find real-time flight offers between major cities, powered by the Amadeus API.
+- 🏨 **Hotel & Activity Suggestions:** (Planned) Integration for hotel and activity recommendations based on user interests and destinations.
+- 🌦️ **Weather Info:** (Planned) Display current weather for selected destinations.
+- 🌐 **Responsive Design:** Fully responsive layout for seamless browsing on desktop, tablet, and mobile devices.
+- 🔎 **Navigation:** Consistent, easy-to-use navbar with links to all major sections, including the Travel Quiz.
+- ⚡ **Fast Static Hosting:** Optimized for quick load times and smooth user experience.
 
 ---
 
@@ -25,6 +31,7 @@
 - `Egypt/` — Egypt destination content  
 - `home/` — Homepage assets and layout  
 - `shop/` — Travel shop interface  
+- `TravelQuiz/` — Travel quiz, flight search, and related scripts  
 - `index.html` — Root landing page
 
 ---
@@ -33,7 +40,8 @@
 
 - HTML5  
 - CSS & Tailwind CSS  
-- JavaScript  
+- JavaScript (Vanilla & Node.js for backend API proxy)
+- Amadeus Self-Service Travel APIs  
 - Responsive Web Design  
 
 ---
@@ -55,8 +63,9 @@ To run locally:
    ```bash
    git clone https://github.com/juanjbsalas/Global-Voyage.git
    cd Global-Voyage
-
-2. Open index.html in your browser to explore the website.
+   ```
+2. Open `index.html` in your browser to explore the website.
+3. For the Travel Quiz and flight search features, run the backend server in `/TravelQuiz` (see `TravelQuiz/README.md` for details).
 
 ---
 
@@ -70,5 +79,3 @@ Contributions are welcome and appreciated.
 ## 🪪 License
 
 📄 License information coming soon.
-
-
