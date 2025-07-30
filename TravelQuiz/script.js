@@ -60,17 +60,17 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/flights', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        origin: originCode,
-        destination: destinationCode,
-        departureDate,
-        returnDate,
-        adults: 1
-      })
-    });
+   const res = await fetch('https://your-backend.onrender.com/api/flights', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    origin: originCode,
+    destination: destinationCode,
+    departureDate,
+    returnDate,
+    adults: 1
+  })
+});
 
     const data = await res.json();
     const resultsContainer = document.getElementById('results');
