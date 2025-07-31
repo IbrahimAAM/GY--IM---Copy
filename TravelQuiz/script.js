@@ -31,7 +31,7 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
   }
 
   try {
-    const response = await fetch('https://your-backend-url.com/api/flights', {
+    const response = await fetch('https://test.api.amadeus.com/v2/shopping/flight-offers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
