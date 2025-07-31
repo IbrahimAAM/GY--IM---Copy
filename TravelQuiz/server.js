@@ -1,68 +1,66 @@
-require('dotenv').config();
+// server.js
 const express = require('express');
+const fetch = require('node-fetch');
 const cors = require('cors');
-const Amadeus = require('amadeus');
-const path = require('path');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (HTML, CSS, JS) from the current directory
-app.use(express.static(__dirname));
+const AMADEUS_API_KEY = process.env.AMADEUS_API_KEY;
+const AMADEUS_API_SECRET = process.env.AMADEUS_API_SECRET;
 
-// Initialize Amadeus only if credentials are present
-let amadeus = null;
-if (process.env.AMADEUS_CLIENT_ID && process.env.AMADEUS_CLIENT_SECRET) {
-  amadeus = new Amadeus({
-    clientId: process.env.AMADEUS_CLIENT_ID,
-    clientSecret: process.env.AMADEUS_CLIENT_SECRET
+let cachedToken = null;
+let tokenExpiry = null;
+
+async function getAccessToken() {
+  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry) {
+    return cachedToken;
+  }
+
+  const res = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: AMADEUS_API_KEY,
+      client_secret: AMADEUS_API_SECRET
+    })
   });
+
+  const data = await res.json();
+  cachedToken = data.access_token;
+  tokenExpiry = Date.now() + data.expires_in * 1000;
+  return cachedToken;
 }
 
 app.post('/api/flights', async (req, res) => {
-  const { origin, destination, departureDate, returnDate, adults } = req.body;
+  const { origin, destination, departureDate, returnDate } = req.body;
 
-  if (amadeus) {
-    try {
-      const response = await amadeus.shopping.flightOffersSearch.get({
-        originLocationCode: origin,
-        destinationLocationCode: destination,
-        departureDate,
-        returnDate,
-        adults
-      });
-      res.json(response.data);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to fetch flights', details: error.description || error.message });
-    }
-  } else {
-    // Dummy response for testing if Amadeus credentials are missing
-    res.json([
-      {
-        price: { total: "500", currency: "USD" },
-        itineraries: [
-          {
-            segments: [
-              {
-                carrierCode: "AA",
-                departure: { iataCode: "JFK" },
-                arrival: { iataCode: "LAX" }
-              }
-            ]
-          }
-        ]
-      }
-    ]);
+  try {
+    const token = await getAccessToken();
+    const query = new URLSearchParams({
+      originLocationCode: origin,
+      destinationLocationCode: destination,
+      departureDate,
+      returnDate,
+      adults: '1',
+      nonStop: 'false',
+      max: '10'
+    });
+
+    const flightRes = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?${query}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const data = await flightRes.json();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch flights' });
   }
 });
 
-// Optional: Serve index.html at root if you want http://localhost:3000/ to work
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.listen(3000, () => {
-  console.log('Backend running on http://localhost:3000');
-}); 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
