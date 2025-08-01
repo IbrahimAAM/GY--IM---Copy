@@ -9,7 +9,7 @@ const cityToIATACode = {
   'sao paulo': 'GRU', 'lima': 'LIM', 'santiago': 'SCL', 'bogota': 'BOG', 'caracas': 'CCS'
 };
 
-document.getElementById('quizForm').addEventListener('submit', async function(e) {
+document.getElementById('quizForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const origin = document.getElementById('origin').value.toLowerCase().trim();
@@ -21,27 +21,40 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
   const originCode = cityToIATACode[origin];
   const destinationCode = cityToIATACode[destination];
 
-  if (!originCode) return alert('Unknown origin city.');
-  if (!destinationCode) return alert('Unknown destination.');
+  if (!originCode) return alert(' Unknown origin city.');
+  if (!destinationCode) return alert(' Unknown destination city.');
+  if (!departureDate || !returnDate) return alert(' Please select both departure and return dates.');
   if (new Date(returnDate) < new Date(departureDate)) {
-    alert('Return date must be after departure date.');
-    return;
+    return alert(' Return date must be after departure date.');
   }
+
+  const resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '🔄 Searching...';
 
   try {
     const res = await fetch(`/api/flights?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&returnDate=${returnDate}`);
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Server error:', text);
+      resultsContainer.textContent = 'Server error. Please try again later.';
+      return;
+    }
+
     const data = await res.json();
-    const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
 
     if (Array.isArray(data.data) && data.data.length > 0) {
+      let found = false;
       data.data.forEach(flight => {
-        if (parseFloat(flight.price.total) <= maxPrice) {
+        const price = parseFloat(flight.price.total);
+        if (price <= maxPrice) {
+          found = true;
           const segment = flight.itineraries[0]?.segments[0];
           const offer = document.createElement('div');
           offer.className = 'bg-white border border-gray-300 p-4 rounded shadow mb-4';
           offer.innerHTML = `
-            <p><strong>Airline:</strong> ${segment?.carrierCode}</p>
+            <p><strong>✈ Airline:</strong> ${segment?.carrierCode || 'N/A'}</p>
             <p><strong>From:</strong> ${segment?.departure.iataCode}</p>
             <p><strong>To:</strong> ${segment?.arrival.iataCode}</p>
             <p><strong>Departure:</strong> ${segment?.departure.at}</p>
@@ -51,11 +64,12 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
           resultsContainer.appendChild(offer);
         }
       });
+      if (!found) resultsContainer.textContent = 'No flights found within the price range.';
     } else {
       resultsContainer.textContent = 'No flights found.';
     }
   } catch (err) {
     console.error('Fetch error:', err);
-    alert('Error fetching flight data.');
+    resultsContainer.textContent = ' Network or server error occurred.';
   }
 });
