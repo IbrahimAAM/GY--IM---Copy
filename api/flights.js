@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
     // Get flight data
     const { origin, destination, departureDate, returnDate } = req.query;
     const flightRes = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=1`, {
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
