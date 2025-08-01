@@ -38,13 +38,13 @@ module.exports = async (req, res) => {
     const flightData = await flightRes.json();
 
     if (!flightRes.ok) {
-      console.error("❌ Flight error:", flightData);
+      console.error("Flight error:", flightData);
       return res.status(500).json({ error: 'Failed to fetch flights', details: flightData });
     }
 
     res.status(200).json(flightData);
   } catch (err) {
-    console.error("🔥 Server error:", err);
+    console.error("Server error:", err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
