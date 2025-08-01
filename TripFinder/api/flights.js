@@ -30,6 +30,7 @@ export default async function handler(req, res) {
     const { origin, destination, departureDate, returnDate } = req.query;
 
     const response = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=1`, {
+      method: 'GET',
       headers: { Authorization: `Bearer ${token}` }
     });
 
