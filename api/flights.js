@@ -1,35 +1,45 @@
-require('dotenv').config();
-
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
   try {
-    // Step 1: Get access token
-    const authRes = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
+    const clientId = process.env.AMADEUS_API_KEY;
+    const clientSecret = process.env.AMADEUS_API_SECRET;
+
+    if (!clientId || !clientSecret) {
+      console.error("Missing Amadeus credentials.");
+      return res.status(500).json({ error: "Missing Amadeus credentials" });
+    }
+
+    // Get access token
+    const tokenRes = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         grant_type: 'client_credentials',
-        client_id: process.env.AMADEUS_API_KEY,
-        client_secret: process.env.AMADEUS_API_SECRET
+        client_id: clientId,
+        client_secret: clientSecret,
       })
     });
 
-    const authData = await authRes.json();
+    const tokenData = await tokenRes.json();
 
-    if (!authRes.ok) {
-      console.error(" Token error:", authData);
-      return res.status(401).json({
-        error: 'Failed to get access token',
-        details: authData
+    if (!tokenRes.ok || !tokenData.access_token) {
+      console.error("Token fetch failed:", tokenData);
+      return res.status(500).json({
+        error: 'Token fetch failed',
+        details: tokenData
       });
     }
 
-    const accessToken = authData.access_token;
+    const accessToken = tokenData.access_token;
 
-    // Step 2: Use token to fetch flights
+    // Validate query parameters
     const { origin, destination, departureDate, returnDate } = req.query;
+    if (!origin || !destination || !departureDate || !returnDate) {
+      return res.status(400).json({ error: 'Missing required query parameters' });
+    }
 
+    // Fetch flight offers
     const flightRes = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=1`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -39,13 +49,17 @@ module.exports = async (req, res) => {
     const flightData = await flightRes.json();
 
     if (!flightRes.ok) {
-      console.error("Flight error:", flightData);
-      return res.status(500).json({ error: 'Failed to fetch flights', details: flightData });
+      console.error("Flight API error:", flightData);
+      return res.status(500).json({
+        error: 'Flight search failed',
+        details: flightData
+      });
     }
 
-    res.status(200).json(flightData);
+    return res.status(200).json(flightData);
+
   } catch (err) {
-    console.error("Server error:", err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Server crashed:", err);
+    return res.status(500).json({ error: 'Internal Server Error', message: err.message });
   }
 };
