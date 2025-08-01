@@ -1,4 +1,5 @@
-// api/flights.js
+require('dotenv').config();
+
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
@@ -17,7 +18,7 @@ module.exports = async (req, res) => {
     const authData = await authRes.json();
 
     if (!authRes.ok) {
-      console.error("❌ Token error:", authData);
+      console.error(" Token error:", authData);
       return res.status(401).json({
         error: 'Failed to get access token',
         details: authData

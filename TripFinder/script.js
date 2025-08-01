@@ -29,7 +29,7 @@ document.getElementById('quizForm').addEventListener('submit', async function (e
   }
 
   const resultsContainer = document.getElementById('results');
-  resultsContainer.innerHTML = '🔄 Searching...';
+  resultsContainer.innerHTML = 'Searching...';
 
   try {
     const res = await fetch(`/api/flights?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&returnDate=${returnDate}`);
