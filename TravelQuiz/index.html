@@ -23,10 +23,10 @@
         <!-- Desktop Nav -->
         <div class="hidden md:flex space-x-4">
             <a href="https://juanjbsalas.github.io/Global-Voyage/" class="hover:bg-[#005FA3] px-3 py-2 rounded">Home</a>
-            <a href="https://juanjbsalas.github.io/Global-Voyage/dest1" class="hover:bg-[#005FA3] px-3 py-2 rounded">Destinations</a>
+            <a href="/dest1/index.html" class="hover:bg-[#005FA3] px-3 py-2 rounded">Destinations</a>
             <a href="/TravelQuiz/index.html" class="hover:bg-[#005FA3] px-3 py-2 rounded">Travel Quiz</a>
-            <a href="https://juanjbsalas.github.io/Global-Voyage/shop" class="hover:bg-[#005FA3] px-3 py-2 rounded">Shop</a>
-            <a href="https://juanjbsalas.github.io/Global-Voyage/contact" class="hover:bg-[#005FA3] px-3 py-2 rounded">Contact</a>
+            <a href="/shop/index.html" class="hover:bg-[#005FA3] px-3 py-2 rounded">Shop</a>
+            <a href="/contact/index.html" class="hover:bg-[#005FA3] px-3 py-2 rounded">Contact</a>
         </div>
         <div class="hidden md:inline-block">
             <a href="https://juanjbsalas.github.io/Global-Voyage/contact" class="px-4 py-2">
@@ -46,10 +46,10 @@
 <div id="mobile-menu" class="hidden fixed inset-0 z-50 flex flex-col items-center justify-center bg-opacity-90 md:hidden bg-gray-100 w-1/2 h-1/3 float-end mt-2 me-2 py-4 rounded-md shadow-lg">
     <div class="flex flex-col items-center text-center text-black space-y-4 px-4 py-2">
         <a href="https://juanjbsalas.github.io/Global-Voyage/" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Home</a>
-        <a href="https://juanjbsalas.github.io/Global-Voyage/dest1" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Destinations</a>
+        <a href="/dest1/index.html" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Destinations</a>
         <a href="/TravelQuiz/index.html" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Travel Quiz</a>
-        <a href="https://juanjbsalas.github.io/Global-Voyage/shop" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Shop</a>
-        <a href="https://juanjbsalas.github.io/Global-Voyage/contact" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Contact</a>
+        <a href="/shop/index.html" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Shop</a>
+        <a href="/contact/index.html" class="w-full hover:bg-sky-400 px-3 py-2 rounded nav-link">Contact</a>
     </div>
 </div>
     <script>
@@ -72,37 +72,19 @@
     <main>
       <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md">
         <h1 class="text-3xl font-bold mb-6 text-center">Plan Your Trip</h1>
-        <form id="quizForm" class="space-y-4">
-            <div>
-  <label for="maxPrice" class="block font-semibold">Max Budget (USD)</label>
-  <input id="maxPrice" type="number" min="0" class="w-full mt-1 p-2 border border-gray-300 rounded" placeholder="e.g. 800" />
-</div>
-
-          <div>
-            <label for="origin" class="block font-semibold">Origin City</label>
-            <input id="origin" class="w-full mt-1 p-2 border border-gray-300 rounded" placeholder="e.g. New York" />
-          </div>
-          <div>
-            <label for="destination" class="block font-semibold">Destination City</label>
-            <input id="destination" class="w-full mt-1 p-2 border border-gray-300 rounded" placeholder="e.g. Bangkok" />
-          </div>
-          <div>
-            <label for="departureDate" class="block font-semibold">Departure Date</label>
-            <input type="date" id="departureDate" class="w-full mt-1 p-2 border border-gray-300 rounded" />
-          </div>
-          <div>
-            <label for="returnDate" class="block font-semibold">Return Date</label>
-            <input type="date" id="returnDate" class="w-full mt-1 p-2 border border-gray-300 rounded" />
-          </div>
-          <div>
-            <label for="interest" class="block font-semibold">Interest</label>
-            <input id="interest" class="w-full mt-1 p-2 border border-gray-300 rounded" placeholder="e.g. Museums" />
-          </div>
-          <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-            Search
-          </button>
-        </form>
-        <div id="results" class="mt-6">
+         <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Search Flights</h1>
+    <form id="quizForm" class="space-y-4">
+      <input id="origin" type="text" placeholder="Origin City" required class="w-full border p-2 rounded" />
+      <input id="destination" type="text" placeholder="Destination City" required class="w-full border p-2 rounded" />
+      <input id="departureDate" type="date" required class="w-full border p-2 rounded" />
+      <input id="returnDate" type="date" required class="w-full border p-2 rounded" />
+      <input id="maxPrice" type="number" placeholder="Max Price (optional)" class="w-full border p-2 rounded" />
+      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Search</button>
+    </form>
+    <div id="results" class="mt-6 space-y-4"></div>
+  </div>
+        <div id="results" class="mt-6 space-y-4">
           <!-- Flight results will be injected here -->
         </div>
       </div>
@@ -142,6 +124,5 @@
 
     <!-- Place your JS at the end of body for best practice -->
     <script src="script.js"></script>
-   
 </body>
 </html>

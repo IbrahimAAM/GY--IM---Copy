@@ -1,5 +1,3 @@
-// script.js (frontend)
-
 const cityToIATACode = {
   'sydney': 'SYD', 'bangkok': 'BKK', 'new york': 'JFK', 'los angeles': 'LAX',
   'tokyo': 'NRT', 'paris': 'CDG', 'london': 'LHR', 'dubai': 'DXB',
@@ -31,18 +29,8 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
   }
 
   try {
-    const response = await fetch('https://test.api.amadeus.com/v2/shopping/flight-offers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        origin: originCode,
-        destination: destinationCode,
-        departureDate,
-        returnDate
-      })
-    });
-
-    const data = await response.json();
+    const res = await fetch(`/api/flights?origin=${originCode}&destination=${destinationCode}&departureDate=${departureDate}&returnDate=${returnDate}`);
+    const data = await res.json();
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
 
@@ -68,6 +56,6 @@ document.getElementById('quizForm').addEventListener('submit', async function(e)
     }
   } catch (err) {
     console.error('Fetch error:', err);
-    alert('Error fetching flight data. Please check console for details.');
+    alert('Error fetching flight data.');
   }
 });
